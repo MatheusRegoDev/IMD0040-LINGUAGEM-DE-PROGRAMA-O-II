@@ -1,4 +1,4 @@
-package Banco;
+package Banco.view;
 
 
 import Banco.controller.ContaCorrenteController;

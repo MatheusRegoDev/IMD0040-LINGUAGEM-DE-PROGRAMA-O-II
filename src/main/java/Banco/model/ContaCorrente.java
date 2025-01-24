@@ -11,7 +11,7 @@ public class ContaCorrente implements Conta {
     private String numeroAgencia;
     private String numeroConta;
     private Pessoa titular;
-    private Double saldo;
+    private double saldo;
     private String senha;
     private LocalDate ultimaDataManutencao;
     private static final double TAXA_MANUTENCAO = 12.50;
@@ -52,11 +52,11 @@ public class ContaCorrente implements Conta {
         this.titular = titular;
     }
 
-    public Double getSaldo() {
+    public double getSaldo() {
         return saldo;
     }
 
-    public void setSaldo(Double saldo) {
+    public void setSaldo(double saldo) {
         this.saldo = saldo;
     }
 
@@ -93,7 +93,7 @@ public class ContaCorrente implements Conta {
     }
 
     @Override
-    public void depositar(Double valor) {
+    public void depositar(double valor) {
         if(valor > 0){
             this.setSaldo(this.getSaldo() + valor);
             this.historico.add(new Movimentacao("Deṕosito", valor, null));
@@ -106,7 +106,7 @@ public class ContaCorrente implements Conta {
     }
 
     @Override
-    public void sacar(Double valor) {
+    public void sacar(double valor) {
         if (valor > 0 && valor <= this.getSaldo()){
             this.setSaldo(this.getSaldo() - valor);
             this.historico.add(new Movimentacao("Saque", valor, null));
@@ -121,7 +121,7 @@ public class ContaCorrente implements Conta {
     public void tranferir(Conta contaParaTranferir, double valor) {
         if (valor > 0 && valor <= this.getSaldo()){
             this.setSaldo(this.getSaldo() - valor);
-            contaParaTranferir.depositar(valor);
+            contaParaTranferir.setSaldo(contaParaTranferir.getSaldo() + valor);
             this.historico.add(new Movimentacao("Transferência", valor, "Transferido para outra conta"));
             contaParaTranferir.getExtrato().add(new Movimentacao("Transferencia", valor, "Recebido de outra conta"));
             System.out.println("Transferencia enviada com sucesso!");

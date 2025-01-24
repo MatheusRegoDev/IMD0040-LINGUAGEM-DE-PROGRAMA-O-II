@@ -1,3 +1,3 @@
-Número Agência;Número da Conta;Nome Titular;CPF titular;E-mail Titular;Saldo;Senha da conta;Útima data de manutenção;Movimentações
-001;98359067-6;Matheus Rodrigues;123.456.789-00;matheus@gmail.com;0.0;matheus123;2025-01-23;Nenhuma movimentação
-001;24179540-6;João Augusto;789.456.123-00;joao@gmail.com;0.0;joao123;2025-01-23;Nenhuma movimentação
+Número Agência;Número da Conta;Nome Titular;CPF titular;E-mail Titular;Saldo;Senha da conta;Última data de manuntenção;Movimentações
+001;33390534-2;Matheus Rodrigues;123.456.789-00;matheus@gmail.com;200.0;1234;2025-01-23;Deṕosito|300.0|2025-01-23T22:59:55.012222605|,Saque|50.0|2025-01-23T23:11:57.988454677|,Transferência|50.0|2025-01-24T15:30:27.411212556|Transferido para outra conta
+001;45798427-4;João Augusto;789.456.123-00;joao@gmail.com;50.0;joao123;2025-01-24;Deṕosito|50.0|2025-01-24T15:30:27.411126538|,Transferencia|50.0|2025-01-24T15:30:27.411237224|Recebido de outra conta

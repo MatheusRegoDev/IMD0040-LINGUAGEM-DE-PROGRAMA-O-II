@@ -1,6 +1,8 @@
 package Banco.controller;
 
+import Banco.dao.ContaCorrenteDao;
 import Banco.dao.ContaPoupancaDao;
+import Banco.model.ContaCorrente;
 import Banco.model.ContaPoupanca;
 import Banco.model.Pessoa;
 import Banco.service.Conta;
@@ -75,6 +77,7 @@ public class ContaPoupancaController {
     }
     private static void processarOperacao(int opcao, ContaPoupanca conta) {
         ArrayList<ContaPoupanca> lista = ContaPoupancaDao.lerContas();
+
         switch (opcao){
             case 1:
                 double valorDeposito;
@@ -83,6 +86,7 @@ public class ContaPoupancaController {
                 valorDeposito = scanner.nextDouble();
                 scanner.nextLine();
                 conta.depositar(valorDeposito);
+                atualizarListaContas(lista, conta);
                 ContaPoupancaDao.reescreverContas(lista);
                 break;
 
@@ -92,21 +96,28 @@ public class ContaPoupancaController {
                 System.out.print("Quantia para sacar: ");
                 valorSaque = scanner.nextDouble();
                 scanner.nextLine();
-                conta.depositar(valorSaque);
+                conta.sacar(valorSaque);
+                atualizarListaContas(lista, conta);
                 ContaPoupancaDao.reescreverContas(lista);
                 break;
 
             case 3:
-                String numeroConta;
-                double valorTransferencia;
                 System.out.println("==== TRANSFERÊNCIA ====");
                 System.out.print("Informe a conta para transferência: ");
-                numeroConta = scanner.toString();
+                String numeroConta = scanner.nextLine();
                 System.out.print("Digite a quantia: ");
-                valorTransferencia = scanner.nextDouble();
+                double valorTransferencia = scanner.nextDouble();
+                scanner.nextLine();
                 ContaPoupanca contaTransferir = Utils.getContaPoupanca(numeroConta);
-                conta.tranferir(contaTransferir, valorTransferencia);
-                ContaPoupancaDao.reescreverContas(lista);
+
+                if (contaTransferir != null) {
+                    conta.tranferir(contaTransferir, valorTransferencia);
+                    atualizarListaContas(lista, conta);
+                    atualizarListaContas(lista, contaTransferir);
+                    ContaPoupancaDao.reescreverContas(lista);
+                } else {
+                    System.out.println("Conta destino não encontrada.");
+                }
                 break;
 
             case 4:
@@ -117,6 +128,15 @@ public class ContaPoupancaController {
 
             default:
                 System.out.println("Opção inválida!");
+        }
+    }
+
+    private static void atualizarListaContas(ArrayList<ContaPoupanca> lista, ContaPoupanca contaAtualizada) {
+        for (int i = 0; i < lista.size(); i++) {
+            if (lista.get(i).getNumeroConta().equals(contaAtualizada.getNumeroConta())) {
+                lista.set(i, contaAtualizada);
+                return;
+            }
         }
     }
 }

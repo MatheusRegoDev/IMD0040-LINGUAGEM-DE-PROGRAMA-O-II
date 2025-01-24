@@ -1,6 +1,8 @@
 package Banco.controller;
 
 import Banco.dao.ContaSalarioDao;
+import Banco.dao.ContaSalarioDao;
+import Banco.model.ContaSalario;
 import Banco.model.ContaSalario;
 import Banco.model.Pessoa;
 import Banco.util.Utils;
@@ -78,36 +80,41 @@ public class ContaSalarioController {
         ArrayList<ContaSalario> lista = ContaSalarioDao.lerContas();
         switch (opcao){
             case 1:
-                double valorDeposito;
+
                 System.out.println("==== DEPÓSITO ====");
                 System.out.print("Quantia para depósito: ");
-                valorDeposito = scanner.nextDouble();
+                double valorDeposito = scanner.nextDouble();
                 scanner.nextLine();
                 conta.depositar(valorDeposito);
                 ContaSalarioDao.reescreverContas(lista);
                 break;
 
             case 2:
-                double valorSaque;
                 System.out.println("==== SAQUE ====");
                 System.out.print("Quantia para sacar: ");
-                valorSaque = scanner.nextDouble();
+                double valorSaque = scanner.nextDouble();
                 scanner.nextLine();
-                conta.depositar(valorSaque);
+                conta.sacar(valorSaque);
                 ContaSalarioDao.reescreverContas(lista);
                 break;
 
             case 3:
-            String numeroConta;
-            double valorTransferencia;
                 System.out.println("==== TRANSFERÊNCIA ====");
                 System.out.print("Informe a conta para transferência: ");
-                numeroConta = scanner.toString();
+                String numeroConta = scanner.nextLine();
                 System.out.print("Digite a quantia: ");
-                valorTransferencia = scanner.nextDouble();
+                double valorTransferencia = scanner.nextDouble();
+                scanner.nextLine();
                 ContaSalario contaTransferir = Utils.getContaSalario(numeroConta);
-                conta.tranferir(contaTransferir, valorTransferencia);
-                ContaSalarioDao.reescreverContas(lista);
+
+                if (contaTransferir != null) {
+                    conta.tranferir(contaTransferir, valorTransferencia);
+                    atualizarListaContas(lista, conta);
+                    atualizarListaContas(lista, contaTransferir);
+                    ContaSalarioDao.reescreverContas(lista);
+                } else {
+                    System.out.println("Conta destino não encontrada.");
+                }
                 break;
 
             case 4:
@@ -118,6 +125,15 @@ public class ContaSalarioController {
 
             default:
                 System.out.println("Opção inválida!");
+        }
+    }
+
+    private static void atualizarListaContas(ArrayList<ContaSalario> lista, ContaSalario contaAtualizada) {
+        for (int i = 0; i < lista.size(); i++) {
+            if (lista.get(i).getNumeroConta().equals(contaAtualizada.getNumeroConta())) {
+                lista.set(i, contaAtualizada);
+                return;
+            }
         }
     }
 

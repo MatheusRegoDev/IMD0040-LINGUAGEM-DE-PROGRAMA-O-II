@@ -79,11 +79,9 @@ public class ContaCorrenteDao{
                     conta.setSaldo(saldo);
                     conta.setUltimaDataManuntecao(ultimaDataManutencao);
 
-                    // Processar movimentações
                     ArrayList<Movimentacao> movimentacao = Utils.juntarMovimentacao(movimentacoes);
                     conta.setHistorico(movimentacao);
 
-                    // Adicione a conta à lista
                     lista.add(conta);
                 } catch (Exception e) {
                     System.out.println("Erro ao processar linha: " + linha);
@@ -92,7 +90,6 @@ public class ContaCorrenteDao{
             }
         } catch (IOException e) {
             e.printStackTrace();}
-
         return lista;
     }
 

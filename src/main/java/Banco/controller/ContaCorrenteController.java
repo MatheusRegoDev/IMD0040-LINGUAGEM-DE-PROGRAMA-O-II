@@ -16,7 +16,7 @@ public class ContaCorrenteController{
         if ( pessoaEncontrada != null){
             ContaCorrente contaCorrente = new ContaCorrente(numeroAgencia, pessoaEncontrada, senha);
             ContaCorrenteDao.salvarConta(contaCorrente);
-            System.out.println("Sua conta poupança foi aberta com sucesso!");
+            System.out.println("Sua conta corrente foi aberta com sucesso!");
         }
         else {
             System.out.println("Não foi possível realizar a abertura de conta!");
@@ -69,56 +69,76 @@ public class ContaCorrenteController{
                     processarOperacao(opcao, conta);
                 }while (opcao != 0);
             }
-        }
-        else {
+        } else {
             System.out.println("Não foi possível fazer o login");
         }
     }
 
     private static void processarOperacao(int opcao, ContaCorrente conta) {
         ArrayList<ContaCorrente> lista = ContaCorrenteDao.lerContas();
-        switch (opcao){
+
+        switch (opcao) {
             case 1:
-                double valorDeposito;
                 System.out.println("==== DEPÓSITO ====");
                 System.out.print("Quantia para depósito: ");
-                valorDeposito = scanner.nextDouble();
+                double valorDeposito = scanner.nextDouble();
                 scanner.nextLine();
                 conta.depositar(valorDeposito);
+                atualizarListaContas(lista, conta);
                 ContaCorrenteDao.reescreverContas(lista);
                 break;
 
             case 2:
-                double valorSaque;
                 System.out.println("==== SAQUE ====");
                 System.out.print("Quantia para sacar: ");
-                valorSaque = scanner.nextDouble();
+                double valorSaque = scanner.nextDouble();
                 scanner.nextLine();
-                conta.depositar(valorSaque);
+                conta.sacar(valorSaque);
+                atualizarListaContas(lista, conta);
                 ContaCorrenteDao.reescreverContas(lista);
                 break;
 
             case 3:
-                String numeroConta;
-                double valorTransferencia;
                 System.out.println("==== TRANSFERÊNCIA ====");
                 System.out.print("Informe a conta para transferência: ");
-                numeroConta = scanner.toString();
+                String numeroConta = scanner.nextLine();
                 System.out.print("Digite a quantia: ");
-                valorTransferencia = scanner.nextDouble();
+                double valorTransferencia = scanner.nextDouble();
+                scanner.nextLine();
                 ContaCorrente contaTransferir = Utils.getContaCorrente(numeroConta);
-                conta.tranferir(contaTransferir, valorTransferencia);
-                ContaCorrenteDao.reescreverContas(lista);
+
+                if (contaTransferir != null) {
+                    conta.tranferir(contaTransferir, valorTransferencia);
+                    atualizarListaContas(lista, conta);
+                    atualizarListaContas(lista, contaTransferir);
+                    ContaCorrenteDao.reescreverContas(lista);
+                } else {
+                    System.out.println("Conta destino não encontrada.");
+                }
                 break;
 
             case 4:
                 conta.exibirExtrato();
+                break;
 
             case 0:
                 System.out.println("Saindo...");
+                break;
 
             default:
                 System.out.println("Opção inválida!");
+                break;
         }
     }
+
+    private static void atualizarListaContas(ArrayList<ContaCorrente> lista, ContaCorrente contaAtualizada) {
+        for (int i = 0; i < lista.size(); i++) {
+            if (lista.get(i).getNumeroConta().equals(contaAtualizada.getNumeroConta())) {
+                lista.set(i, contaAtualizada);
+                return;
+            }
+        }
+    }
+
+
 }

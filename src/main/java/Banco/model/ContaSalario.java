@@ -52,11 +52,11 @@ public class ContaSalario implements Conta {
         this.titular = titular;
     }
 
-    public Double getSaldo() {
+    public double getSaldo() {
         return saldo;
     }
 
-    public void setSaldo(Double saldo) {
+    public void setSaldo(double saldo) {
         this.saldo = saldo;
     }
 
@@ -100,7 +100,7 @@ public class ContaSalario implements Conta {
                 '}';
     }
 
-    public void depositar(Double valor) {
+    public void depositar(double valor) {
         if(valor > 0){
             this.setSaldo(this.getSaldo() + valor);
             this.historico.add(new Movimentacao("Deṕosito", valor, null));
@@ -113,7 +113,7 @@ public class ContaSalario implements Conta {
     }
 
     @Override
-    public void sacar(Double valor) {
+    public void sacar(double valor) {
         LocalDate hoje = LocalDate.now();
         if (this.ultimaDataSaque== null || !this.ultimaDataSaque.equals(hoje)) {
             this.ultimaDataSaque = hoje;
@@ -141,7 +141,7 @@ public class ContaSalario implements Conta {
     public void tranferir(Conta contaParaTranferir, double valor) {
         if (valor > 0 && valor <= this.getSaldo()){
             this.setSaldo(this.getSaldo() - valor);
-            contaParaTranferir.depositar(valor);
+            contaParaTranferir.setSaldo(contaParaTranferir.getSaldo() + valor);
             this.historico.add(new Movimentacao("Transferência", valor, "Transferido para outra conta"));
             contaParaTranferir.getExtrato().add(new Movimentacao("Transferencia", valor, "Recebido de outra conta"));
             System.out.println("Transferencia enviada com sucesso!");
@@ -180,13 +180,4 @@ public class ContaSalario implements Conta {
             System.out.println(movimento);
         }
     }
-
-    public int saquesRestantesHoje() {
-        LocalDate hoje = LocalDate.now();
-        if (this.ultimaDataSaque == null || !this.ultimaDataSaque.equals(hoje)) {
-            return LIMITE_SAQUES_DIARIO;
-        }
-        return LIMITE_SAQUES_DIARIO - saquesRealizadosHoje;
-    }
-
 }

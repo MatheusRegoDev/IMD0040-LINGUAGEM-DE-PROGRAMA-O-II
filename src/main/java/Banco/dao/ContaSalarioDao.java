@@ -54,34 +54,41 @@ public class ContaSalarioDao {
                     continue;
                 }
 
-                String[] partes = linha.split(";");
-                String numeroAgencia = partes[0];
-                String numeroConta = partes[1];
-                String nomeTitular = partes[2];
-                String cpfTitular = partes[3];
-                String emailTtitular = partes[4];
-                Double saldo = Double.valueOf(partes[5]);
-                String senha = partes[6];
-                int qtdSaqueHoje = Integer.parseInt(partes[7]);
-                LocalDate ultimaDataSaque = partes[8].isEmpty() ? null : LocalDate.parse(partes[8]);
-                String movimentacoes = partes[9];
+                try {
+                    String[] partes = linha.split(";");
+                    String numeroAgencia = partes[0];
+                    String numeroConta = partes[1];
+                    String nomeTitular = partes[2];
+                    String cpfTitular = partes[3];
+                    String emailTtitular = partes[4];
+                    Double saldo = Double.valueOf(partes[5]);
+                    String senha = partes[6];
+                    int qtdSaqueHoje = Integer.parseInt(partes[7]);
+                    LocalDate ultimaDataSaque = LocalDate.parse(partes[8]);
+                    String movimentacoes = partes[9];
 
-                ContaSalario conta = new ContaSalario(numeroAgencia, new Pessoa(nomeTitular,cpfTitular,
-                        emailTtitular), senha);
-                conta.setNumeroConta(numeroConta);
-                conta.setSaldo(saldo);
-                conta.setSaquesRealizadosHoje(qtdSaqueHoje);
-                conta.setUltimaDataSaque(ultimaDataSaque);
-                ArrayList<Movimentacao> movimentacao = Utils.juntarMovimentacao(movimentacoes);
-                conta.setHistorico(movimentacao);
-                lista.add(conta);
+                    ContaSalario conta = new ContaSalario(
+                            numeroAgencia,
+                            new Pessoa(nomeTitular,cpfTitular, emailTtitular),
+                            senha);
+
+                    conta.setNumeroConta(numeroConta);
+                    conta.setSaldo(saldo);
+                    conta.setSaquesRealizadosHoje(qtdSaqueHoje);
+                    conta.setUltimaDataSaque(ultimaDataSaque);
+
+                    ArrayList<Movimentacao> movimentacao = Utils.juntarMovimentacao(movimentacoes);
+                    conta.setHistorico(movimentacao);
+
+                    lista.add(conta);
+                }catch (Exception e) {
+                    System.out.println("Erro ao processar linha: " + linha);
+                    e.printStackTrace();
+                }
             }
-            leitor.close();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return lista;
     }
 

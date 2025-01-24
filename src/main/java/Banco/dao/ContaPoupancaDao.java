@@ -54,6 +54,7 @@ public class ContaPoupancaDao {
                     continue;
                 }
 
+                try{
                 String[] partes = linha.split(";");
                 String numeroAgencia = partes[0];
                 String numeroConta = partes[1];
@@ -65,21 +66,27 @@ public class ContaPoupancaDao {
                 LocalDate  ultimaDataRendimento = LocalDate.parse(partes[7]);
                 String movimentacoes = partes[8];
 
-                ContaPoupanca conta = new ContaPoupanca(numeroAgencia, new Pessoa(nomeTitular,cpfTitular,
-                        emailTtitular), senha);
+                ContaPoupanca conta = new ContaPoupanca(
+                        numeroAgencia,
+                        new Pessoa(nomeTitular,cpfTitular, emailTtitular),
+                        senha);
+
                 conta.setNumeroConta(numeroConta);
                 conta.setSaldo(saldo);
                 conta.setUltimaDataRendimento(ultimaDataRendimento);
+
                 ArrayList<Movimentacao> movimentacao = Utils.juntarMovimentacao(movimentacoes);
                 conta.setHistorico(movimentacao);
-                lista.add(conta);
-            }
-            leitor.close();
 
+                lista.add(conta);
+                }catch (Exception e) {
+                    System.out.println("Erro ao processar linha: " + linha);
+                    e.printStackTrace();
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return lista;
     }
 

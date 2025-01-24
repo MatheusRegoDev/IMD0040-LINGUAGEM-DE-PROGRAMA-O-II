@@ -38,6 +38,9 @@ public class Utils {
     }
 
     public static String separarMovimentacao(ArrayList<Movimentacao> movimentacao){
+        if (movimentacao == null || movimentacao.equals("Nenhuma movimentação")){
+            return "Nenhuma movimentação";
+        }
         StringBuilder builder = new StringBuilder();
         for (Movimentacao movimento : movimentacao){
             builder.append(movimento.getTipo()).append("|")
@@ -53,17 +56,17 @@ public class Utils {
 
     public static ArrayList<Movimentacao> juntarMovimentacao(String movimentacao){
         ArrayList<Movimentacao> listaMovimentacao = new ArrayList<>();
-        if (movimentacao.isEmpty()){
-            return listaMovimentacao;
+        if (movimentacao.isEmpty() || movimentacao.equals("Nenhuma movimentação")){
+            return new ArrayList<Movimentacao>();
         }
 
         String[] arraymovimentacoes = movimentacao.split(",");
         for (String movimento : arraymovimentacoes){
-            String[] partes = movimento.split("|");
+            String[] partes = movimento.split("\\|");
             String tipo = partes[0];
             double valor = Double.parseDouble(partes[1]);
             LocalDateTime dateHora = LocalDateTime.parse(partes[2]);
-            String descricao = partes.length > 2 ? partes[2] : null;
+            String descricao = partes.length > 3 ? partes[3] : null;
 
             Movimentacao auxMovimentacao = new Movimentacao(tipo, valor, descricao);
             auxMovimentacao.setDataHora(dateHora);
